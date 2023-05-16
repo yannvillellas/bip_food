@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:bip_food/data/database.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -51,10 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
     setState(() {
-      if (db.foodList.contains([
-        (_controller.text),
-        'assets/images/${_controller.text.toLowerCase()}.png'
-      ])) {
+      if (File('assets/images/${_controller.text.toLowerCase()}.png')
+          .existsSync()) {
         db.foodList.add([
           _controller.text,
           'assets/images/${_controller.text.toLowerCase()}.png'
