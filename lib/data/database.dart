@@ -9,8 +9,8 @@ class FoodDatabase {
   //run this method if this is the first time ever the app is opened
   void createInitialData() {
     foodList = [
-      ['Cheese', 'assets/images/cheese.png'],
-      ['Eggs', 'assets/images/egg.png'],
+      ['Cheese', 'assets/images/cheese.png', DateTime(2023, 05, 29)],
+      ['Eggs', 'assets/images/egg.png', DateTime(2023, 06, 12)],
     ];
   }
 

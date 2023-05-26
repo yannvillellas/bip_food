@@ -24,7 +24,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      db.loadData();
+      // db.loadData();
+      db.createInitialData();
+      db.updateDatabase();
     }
   }
 
@@ -89,22 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('Bip Food'),
         elevation: 0,
       ),
-      // body: ListView(
-      //   children: const [
-      //     FoodTile(
-      //       foodName: 'Cheese',
-      //       foodImage: 'assets/images/cheese.png',
-      //     ),
-      //     FoodTile(
-      //       foodName: 'Eggs',
-      //       foodImage: 'assets/images/egg.png',
-      //     ),
-      //     FoodTile(
-      //       foodName: 'Carrots',
-      //       foodImage: 'assets/images/carrot.png',
-      //     ),
-      //   ],
-      // ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         onPressed: () {
@@ -120,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           return FoodTile(
             foodName: db.foodList[index][0],
             foodImage: db.foodList[index][1],
+            foodExpiryDate: db.foodList[index][2],
             removeIngredient: (context) => _removeFood(index),
           );
         },

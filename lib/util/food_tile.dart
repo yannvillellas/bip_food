@@ -4,11 +4,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class FoodTile extends StatelessWidget {
   final String foodName;
   final String foodImage;
+  final DateTime foodExpiryDate;
   final Function(BuildContext)? removeIngredient;
   const FoodTile({
     super.key,
     required this.foodName,
     required this.foodImage,
+    required this.foodExpiryDate,
     this.removeIngredient,
   });
 
@@ -41,9 +43,18 @@ class FoodTile extends StatelessWidget {
                   height: 20,
                   width: 20,
                 ),
-                const SizedBox(width: 24),
+                const SizedBox(width: 15),
                 Text(
                   foodName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${foodExpiryDate.day}/${foodExpiryDate.month < 10 ? '0${foodExpiryDate.month}' : foodExpiryDate.month}/${foodExpiryDate.year}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
