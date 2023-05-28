@@ -24,9 +24,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      // db.loadData();
-      db.createInitialData();
-      db.updateDatabase();
+      db.loadData();
+      // db.createInitialData();
+      // db.updateDatabase();
     }
   }
 
