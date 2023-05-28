@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //save a new ingredient to the hive box
-  void saveNewIngredient() {
+  void saveNewIngredient(DateTime date) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.green,
@@ -59,13 +59,13 @@ class _MyHomePageState extends State<MyHomePage> {
         db.foodList.add([
           _controller.text,
           'assets/images/${_controller.text.toLowerCase()}.png',
-          DateTime(2023, 05, 29),
+          date,
         ]);
       } else {
         db.foodList.add([
           _controller.text,
           'assets/images/default.png',
-          DateTime(2023, 06, 18),
+          date,
         ]);
       }
 
@@ -76,15 +76,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addFood(BuildContext context) {
+    DateTime selectedDate =
+        DateTime.now(); // Initialize the selected date variable
     showDialog(
-        context: context,
-        builder: (context) {
-          return DialogBox(
-            controller: _controller,
-            onSave: saveNewIngredient,
-            onCancel: () => Navigator.of(context).pop(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: () =>
+              saveNewIngredient(selectedDate), // Pass the selected date
+          onCancel: () => Navigator.of(context).pop(),
+          onDateSelected: (date) {
+            selectedDate = date; // Update the selected date variable
+          },
+        );
+      },
+    );
   }
 
   @override

@@ -12,7 +12,9 @@ class MyButton extends StatelessWidget {
       color: Colors.green,
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(
+          color: Colors.white,
+        ),
       ),
     );
   }
