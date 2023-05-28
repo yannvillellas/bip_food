@@ -54,7 +54,7 @@ class FoodTile extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '${foodExpiryDate.day}/${foodExpiryDate.month < 10 ? '0${foodExpiryDate.month}' : foodExpiryDate.month}/${foodExpiryDate.year}',
+                  '${foodExpiryDate.day < 10 ? '0${foodExpiryDate.day}' : foodExpiryDate.day}/${foodExpiryDate.month < 10 ? '0${foodExpiryDate.month}' : foodExpiryDate.month}/${foodExpiryDate.year}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

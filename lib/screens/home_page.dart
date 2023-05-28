@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bip_food/data/database.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../util/food_tile.dart';
 import '../util/dialog_box.dart';
 
@@ -24,9 +24,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      // db.loadData();
-      db.createInitialData();
-      db.updateDatabase();
+      db.loadData();
+      // db.createInitialData();
+      // db.updateDatabase();
     }
   }
 
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //save a new ingredient to the hive box
-  void saveNewIngredient() {
+  void saveNewIngredient(DateTime date) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.green,
@@ -58,10 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
           .existsSync()) {
         db.foodList.add([
           _controller.text,
-          'assets/images/${_controller.text.toLowerCase()}.png'
+          'assets/images/${_controller.text.toLowerCase()}.png',
+          date,
         ]);
       } else {
-        db.foodList.add([_controller.text, 'assets/images/default.png']);
+        db.foodList.add([
+          _controller.text,
+          'assets/images/default.png',
+          date,
+        ]);
       }
 
       _controller.clear();
@@ -71,15 +76,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addFood(BuildContext context) {
+    DateTime selectedDate =
+        DateTime.now(); // Initialize the selected date variable
     showDialog(
-        context: context,
-        builder: (context) {
-          return DialogBox(
-            controller: _controller,
-            onSave: saveNewIngredient,
-            onCancel: () => Navigator.of(context).pop(),
-          );
-        });
+      context: context,
+      builder: (context) {
+        return DialogBox(
+          controller: _controller,
+          onSave: () =>
+              saveNewIngredient(selectedDate), // Pass the selected date
+          onCancel: () => Navigator.of(context).pop(),
+          onDateSelected: (date) {
+            selectedDate = date; // Update the selected date variable
+          },
+        );
+      },
+    );
   }
 
   @override
