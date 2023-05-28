@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bip_food/data/database.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../util/food_tile.dart';
 import '../util/dialog_box.dart';
 
@@ -58,10 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
           .existsSync()) {
         db.foodList.add([
           _controller.text,
-          'assets/images/${_controller.text.toLowerCase()}.png'
+          'assets/images/${_controller.text.toLowerCase()}.png',
+          DateTime(2023, 05, 29),
         ]);
       } else {
-        db.foodList.add([_controller.text, 'assets/images/default.png']);
+        db.foodList.add([
+          _controller.text,
+          'assets/images/default.png',
+          DateTime(2023, 06, 18),
+        ]);
       }
 
       _controller.clear();
