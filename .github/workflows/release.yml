@@ -1,0 +1,34 @@
+name: Publish APK Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check version
+        id: version
+        run: echo "::set-output name=version::$(curl -sS https://storage.googleapis.com/flutter_infra/releases/releases_linux.json | jq -r '.current_release.tag_name')"
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.version.outputs.version }}
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Publish Release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          artifacts: build/app/outputs/flutter-apk/app-release.apk
+          releaseTag: ${{ steps.version.outputs.version }}
