@@ -16,8 +16,9 @@ jobs:
       - name: Extract Version
         id: extract_version
         run: |
-          version=$(grep -oP 'v\d+\.\d+\.\d+' pubspec.yaml)
+          version=$(sed -nE 's/version:\s*([0-9]+\.[0-9]+\.[0-9]+)/\1/p' pubspec.yaml)
           echo "::set-output name=version::$version"
+
 
       - name: Create Git Tag
         run: git tag ${{ steps.extract_version.outputs.version }}
