@@ -13,13 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Set up Flutter
-      uses: dart-lang/setup-dart@v1
+      uses: flutter/flutter@v2
       with:
-        dart-sdk: stable
-    - name: Install Flutter
-      run: flutter precache
+        channel: stable
+    - name: Clone repository
+      run: git clone https://github.com/yannvillellas/bip_food.git
+    - name: Navigate to repository directory
+      run: cd bip_food
     - name: Install dependencies
       run: flutter pub get
     - name: Build release
@@ -47,6 +48,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/app/outputs/flutter-apk/app-release.apk
+        asset_path: bip_food/build/app/outputs/flutter-apk/app-release.apk
         asset_name: app-release.apk
         asset_content_type: application/vnd.android.package-archive
