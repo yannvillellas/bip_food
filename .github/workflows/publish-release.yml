@@ -14,14 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Dart SDK
+    - name: Set up Flutter
       uses: dart-lang/setup-dart@v1
       with:
         dart-sdk: stable
+    - name: Install Flutter
+      run: flutter precache
     - name: Install dependencies
-      run: dart pub get
+      run: flutter pub get
     - name: Build release
-      run: dart build --release
+      run: flutter build --release
     - name: Get version number
       id: version
       run: echo "::set-output name=version::$(grep -oP 'v\d+\.\d+\.\d+' <<< ${{ github.event.head_commit.message }} || true)"
