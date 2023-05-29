@@ -29,6 +29,6 @@ jobs:
         uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.version.outputs.version }}
         with:
           artifacts: build/app/outputs/flutter-apk/app-release.apk
-          releaseTag: ${{ steps.version.outputs.version }}
