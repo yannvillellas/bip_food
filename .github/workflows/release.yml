@@ -1,4 +1,4 @@
-name: Publish APK Release 
+name: Publish .apk release
 
 on:
   push:
