@@ -5,10 +5,10 @@ on:
     branches:
       - main
   pull_request:
-    types:
-      - closed
     branches:
       - main
+    types:
+      - closed
 
 jobs:
   build:
@@ -28,15 +28,7 @@ jobs:
       - name: Run tests
         run: dart test
 
-      - name: Determine release version
-        id: determine_version
-        run: echo ::set-output name=version::${{ github.ref_name }}
-
       - name: Build APK
-        if: startsWith(steps.determine_version.outputs.version, 'v0.')
-        run: flutter build apk --flavor pre-release --release
-      - name: Build APK
-        if: !startsWith(steps.determine_version.outputs.version, 'v0.')
         run: flutter build apk --release
 
       - name: Publish APK
@@ -44,3 +36,15 @@ jobs:
         with:
           name: Release APK
           path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            This is a pre-release version.
+          prerelease: true
