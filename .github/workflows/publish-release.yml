@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Set up Flutter
-      uses: flutter/flutter@v2
+      uses: flutter/flutter@main
       with:
         channel: stable
     - name: Clone repository
