@@ -2,8 +2,14 @@ import 'dart:io';
 import 'package:bip_food/data/database.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import '../util/food_tile.dart';
 import '../util/dialog_box.dart';
+import '../notification_manager/notification_manager.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -28,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // db.createInitialData();
       // db.updateDatabase();
     }
+    NotificationManager.initialize(flutterLocalNotificationsPlugin);
   }
 
   void _removeFood(int index) {
@@ -107,6 +114,10 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.green,
         onPressed: () {
           _addFood(context);
+          NotificationManager.displayNotification(
+              title: 'Bip Food',
+              body: 'You have added a new food item',
+              flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
         },
         child: const Icon(
           Icons.add,
