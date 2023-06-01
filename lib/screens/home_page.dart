@@ -104,16 +104,55 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[200],
+      backgroundColor: const Color(0xFFFFF5D6),
       appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Bip Food'),
+        centerTitle: false,
+        title: const Text('Bip Food', style: TextStyle(color: Colors.black)),
         elevation: 0,
+        backgroundColor: const Color(0xFFFFF5D6),
+        actions: [
+          Row(
+            children: [
+              SizedBox(
+                height: 80,
+                width: 80,
+                child: IconButton(
+                  icon: const CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/logo.png'),
+                    radius:
+                        20, // Half of the width and height for a circular shape
+                  ),
+                  onPressed: () {
+                    // FIXME: to be removed - write "button pressed" on display dialog box to test if the button works
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Bip Food'),
+                          content: const Text('Version 0.0.4'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
         onPressed: () {
           _addFood(context);
+          // FIXME: to be removed
           NotificationManager.displayNotification(
               title: 'Bip Food',
               body: 'You have added a new food item',
