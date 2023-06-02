@@ -1,3 +1,4 @@
+import 'package:bip_food/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -14,6 +15,19 @@ class FoodTile extends StatelessWidget {
     this.removeIngredient,
   });
 
+  Color _getCircleColor() {
+    final DateTime currentDate = DateTime.now();
+    final int difference = foodExpiryDate.difference(currentDate).inDays;
+
+    if (difference < 0) {
+      return red;
+    } else if (difference < 3) {
+      return yellow;
+    } else {
+      return green;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,7 +39,7 @@ class FoodTile extends StatelessWidget {
             SlidableAction(
               onPressed: removeIngredient,
               icon: Icons.delete,
-              backgroundColor: Colors.red,
+              backgroundColor: red,
               borderRadius: BorderRadius.circular(12),
             ),
           ],
@@ -33,9 +47,16 @@ class FoodTile extends StatelessWidget {
         child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    color: purple,
+                    spreadRadius: 0.5,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ]),
             child: Row(
               children: [
                 Image.asset(
@@ -47,7 +68,6 @@ class FoodTile extends StatelessWidget {
                 Text(
                   foodName,
                   style: const TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
                   ),
@@ -56,9 +76,17 @@ class FoodTile extends StatelessWidget {
                 Text(
                   '${foodExpiryDate.day < 10 ? '0${foodExpiryDate.day}' : foodExpiryDate.day}/${foodExpiryDate.month < 10 ? '0${foodExpiryDate.month}' : foodExpiryDate.month}/${foodExpiryDate.year}',
                   style: const TextStyle(
-                    color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8),
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _getCircleColor(),
                   ),
                 ),
               ],
