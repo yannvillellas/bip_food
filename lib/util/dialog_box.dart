@@ -1,3 +1,4 @@
+import 'package:bip_food/main.dart';
 import 'package:flutter/material.dart';
 import '../util/my_button.dart';
 
@@ -31,7 +32,8 @@ class _DialogBoxState extends State<DialogBox> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.green[200],
+      //background color FFF5D6,
+      backgroundColor: white,
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -39,20 +41,14 @@ class _DialogBoxState extends State<DialogBox> {
           // Name input
           TextField(
             controller: widget.controller,
-            style: const TextStyle(
-                color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: black),
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: 'Food Name',
-              hintStyle:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              // color black not bold
+              hintStyle: TextStyle(color: purple, fontWeight: FontWeight.bold),
             ),
           ),
-
-          const SizedBox(
-            height: 10,
-          ),
-
           // Expiry date input
           Row(
             children: [
@@ -61,8 +57,7 @@ class _DialogBoxState extends State<DialogBox> {
                 child: Text(
                   'Expiry Date:',
                   style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
+                    color: black,
                   ),
                 ),
               ),
@@ -71,7 +66,7 @@ class _DialogBoxState extends State<DialogBox> {
                 child: Text(
                   '${date.day < 10 ? '0${date.day}' : date.day}/${date.month < 10 ? '0${date.month}' : date.month}/${date.year}',
                   style: const TextStyle(
-                    color: Colors.green,
+                    color: purple,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -79,12 +74,12 @@ class _DialogBoxState extends State<DialogBox> {
               Expanded(
                 flex: 1,
                 child: IconButton(
-                  icon: const Icon(Icons.calendar_today, color: Colors.black),
+                  icon: const Icon(Icons.calendar_today, color: black),
                   onPressed: () async {
                     DateTime? newDate = await showDatePicker(
                       context: context,
                       initialDate: date,
-                      firstDate: DateTime.now(),
+                      firstDate: DateTime(date.year, date.month - 1, date.day),
                       lastDate: DateTime(2100),
                     );
                     // Save button pressed
@@ -102,9 +97,7 @@ class _DialogBoxState extends State<DialogBox> {
             ],
           ),
 
-          const SizedBox(
-            height: 24,
-          ),
+          const SizedBox(height: 10),
 
           // Save and cancel buttons
           Row(
