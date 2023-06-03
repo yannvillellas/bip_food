@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (context) {
                         return AlertDialog(
                           title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.4'),
+                          content: const Text('Version 0.0.6'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -179,19 +179,19 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 100,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.transparent, purple],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Container(
+          //     height: 100,
+          //     decoration: const BoxDecoration(
+          //       gradient: LinearGradient(
+          //         colors: [Colors.transparent, purple],
+          //         begin: Alignment.topCenter,
+          //         end: Alignment.bottomCenter,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

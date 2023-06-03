@@ -9,13 +9,13 @@ class MyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: purple,
+            color: const Color(0xFF896BB3).withOpacity(0.1),
             spreadRadius: 0.5,
-            offset: Offset(0, 2),
             blurRadius: 4,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -23,7 +23,7 @@ class MyButton extends StatelessWidget {
         onPressed: onPressed,
         color: white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(7),
         ),
         child: Text(
           text,
