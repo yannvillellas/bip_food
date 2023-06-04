@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:bip_food/data/database.dart';
 import 'package:bip_food/main.dart';
 import 'package:flutter/material.dart';
@@ -30,15 +29,18 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      // db.loadData();
-      db.createInitialData();
-      db.updateDatabase();
+      db.loadData();
+      // db.createInitialData();
+      // db.updateDatabase();
     }
     NotificationManager.initialize(flutterLocalNotificationsPlugin);
   }
 
   void _removeFood(int index) {
     db.updateDatabase();
+    setState(() {
+      db.foodList.removeAt(index);
+    });
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: red,
@@ -46,26 +48,82 @@ class _MyHomePageState extends State<MyHomePage> {
         duration: Duration(seconds: 1),
       ),
     );
-    setState(() {
-      db.foodList.removeAt(index);
-    });
   }
 
-  //save a new ingredient to the hive box
+  // save a new ingredient to the hive box
+  // brute force method to check for food image because checking for existence of image in assets folder does not work on android but just works on windows debug
   void saveNewIngredient(DateTime date) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: green,
-        content: Text('Food added'),
-        duration: Duration(seconds: 1),
-      ),
-    );
     setState(() {
-      if (File('assets/images/${_controller.text.toLowerCase()}.png')
-          .existsSync()) {
+      if (_controller.text.toLowerCase().contains('cheese')) {
         db.foodList.add([
           _controller.text,
-          'assets/images/${_controller.text.toLowerCase()}.png',
+          'assets/images/cheese.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('egg')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/egg.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('pizza')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/pizza.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('milk')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/milk.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('apple')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/apple.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('banana')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/banana.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('carrot')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/carrot.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('tomato')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/tomato.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('watermelon')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/watermelon.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('can')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/can.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('kiwi')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/kiwi.png',
+          date,
+        ]);
+      } else if (_controller.text.toLowerCase().contains('peach')) {
+        db.foodList.add([
+          _controller.text,
+          'assets/images/peach.png',
           date,
         ]);
       } else {
@@ -75,11 +133,53 @@ class _MyHomePageState extends State<MyHomePage> {
           date,
         ]);
       }
-
       _controller.clear();
     });
     Navigator.of(context).pop();
     db.updateDatabase();
+
+    NotificationManager.displayNotification(
+        title: 'Bip Food',
+        body:
+            'You have added ${db.foodList.last[0]} which will expire on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}',
+        flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
+
+    // create a notification 3 days before the expiry date of the food item received at 8am
+    NotificationManager.scheduleExpiryReminderNotification(
+        title: 'Bip Food',
+        body:
+            'Your ${db.foodList.last[0]} will expire in 3 days on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}',
+        notificationDate: date
+            .subtract(const Duration(days: 3))
+            .add(
+              const Duration(hours: 8),
+            )
+            .add(
+              const Duration(seconds: 30),
+            ),
+        flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
+
+    // notification when the food item has expired
+    NotificationManager.scheduleExpiryReminderNotification(
+        title: 'Bip Food',
+        body:
+            'Your ${db.foodList.last[0]} has expired on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}',
+        notificationDate: date
+            .add(
+              const Duration(hours: 0),
+            )
+            .add(
+              const Duration(seconds: 1),
+            ),
+        flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: green,
+        content: Text('Food added'),
+        duration: Duration(seconds: 1),
+      ),
+    );
   }
 
   void _addFood(BuildContext context) {
@@ -126,13 +226,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     fit: BoxFit.contain,
                   ),
                   onPressed: () {
-                    // FIXME: to be removed - write "button pressed" on display dialog box to test if the button works
+                    // FIXME: to be removed - a profile page will be added
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
                           title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.6'),
+                          content: const Text('Version 0.0.8'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -155,11 +255,6 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: purple,
         onPressed: () {
           _addFood(context);
-          // FIXME: to be removed
-          NotificationManager.displayNotification(
-              title: 'Bip Food',
-              body: 'You have added a new food item',
-              flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
         },
         child: const Icon(
           Icons.add,
@@ -179,19 +274,6 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Container(
-          //     height: 100,
-          //     decoration: const BoxDecoration(
-          //       gradient: LinearGradient(
-          //         colors: [Colors.transparent, purple],
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
