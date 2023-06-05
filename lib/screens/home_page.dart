@@ -232,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (context) {
                         return AlertDialog(
                           title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.8'),
+                          content: const Text('Version 0.0.9'),
                           actions: [
                             TextButton(
                               onPressed: () {
