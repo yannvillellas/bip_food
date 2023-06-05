@@ -148,28 +148,28 @@ class _MyHomePageState extends State<MyHomePage> {
     NotificationManager.scheduleExpiryReminderNotification(
         title: 'Bip Food',
         body:
-            'Your ${db.foodList.last[0]} will expire in 3 days on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}',
+            'Your ${db.foodList.last[0]} will expire in 3 days on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}. The notification will arrive at ${date.add(const Duration(days: 3)).add(const Duration(hours: 10)).add(const Duration(minutes: 0))}',
         notificationDate: date
             .subtract(const Duration(days: 3))
             .add(
-              const Duration(hours: 8),
+              const Duration(hours: 10),
             )
             .add(
-              const Duration(seconds: 30),
+              const Duration(minutes: 00),
             ),
         flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
 
-    // notification when the food item has expired
+    // // notification when the food item has expired
     NotificationManager.scheduleExpiryReminderNotification(
         title: 'Bip Food',
         body:
-            'Your ${db.foodList.last[0]} has expired on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}',
+            'Your ${db.foodList.last[0]} has expired on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}. The notification will arrive at ${date.add(const Duration(hours: 0)).add(const Duration(seconds: 10))}',
         notificationDate: date
             .add(
               const Duration(hours: 0),
             )
             .add(
-              const Duration(seconds: 1),
+              const Duration(seconds: 10),
             ),
         flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin);
 
@@ -232,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       builder: (context) {
                         return AlertDialog(
                           title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.8'),
+                          content: const Text('Version 0.0.9'),
                           actions: [
                             TextButton(
                               onPressed: () {
