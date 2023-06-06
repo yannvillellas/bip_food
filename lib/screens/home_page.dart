@@ -1,5 +1,6 @@
 import 'package:bip_food/data/database.dart';
 import 'package:bip_food/main.dart';
+import 'package:bip_food/util/item_count.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -207,49 +208,67 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: 120,
         centerTitle: false,
-        title: const Text('Bip Food',
-            style: TextStyle(
-                color: black, fontSize: 50, fontWeight: FontWeight.bold)),
         elevation: 0,
         backgroundColor: white,
-        actions: [
-          Row(
-            children: [
-              SizedBox(
-                height: 80,
-                width: 80,
-                child: IconButton(
-                  icon: Image.asset(
-                    'assets/images/logo_circle.png',
-                    fit: BoxFit.contain,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                const Text('Bip Food',
+                    style: TextStyle(
+                        color: black,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold)),
+                const Spacer(),
+                SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: IconButton(
+                    icon: Image.asset(
+                      'assets/images/logo_circle.png',
+                      fit: BoxFit.contain,
+                    ),
+                    onPressed: () {
+                      // FIXME: to be removed - a profile page will be added
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Bip Food'),
+                            content: const Text('Version 0.0.9'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    // FIXME: to be removed - a profile page will be added
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.9'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            // write a custom text to show the number of food items in the list, the number of red items and the number of green items
+            Row(
+              children: [
+                ItemCount(db: db, color: purple),
+                const SizedBox(width: 20),
+                ItemCount(db: db, color: red),
+                const SizedBox(width: 20),
+                ItemCount(db: db, color: yellow),
+                const SizedBox(width: 20),
+                ItemCount(db: db, color: green),
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: purple,
