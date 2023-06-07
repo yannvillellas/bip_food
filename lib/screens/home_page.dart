@@ -31,9 +31,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      // db.loadData();
-      db.createInitialData();
-      db.updateDatabase();
+      db.loadData();
+      // db.createInitialData();
+      // db.updateDatabase();
     }
     NotificationManager.initialize(flutterLocalNotificationsPlugin);
   }
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
     NotificationManager.scheduleExpiryReminderNotification(
         title: 'Bip Food',
         body:
-            'Your ${db.foodList.last[0]} will expire in 3 days on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}. The notification will arrive at ${date.add(const Duration(days: 3)).add(const Duration(hours: 10)).add(const Duration(minutes: 0))}',
+            'Your ${db.foodList.last[0]} will expire in 3 days on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}.',
         notificationDate: date
             .subtract(const Duration(days: 3))
             .add(
@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
     NotificationManager.scheduleExpiryReminderNotification(
         title: 'Bip Food',
         body:
-            'Your ${db.foodList.last[0]} has expired on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}. The notification will arrive at ${date.add(const Duration(hours: 0)).add(const Duration(seconds: 10))}',
+            'Your ${db.foodList.last[0]} has expired on ${db.foodList.last[2].day}/${db.foodList.last[2].month}/${db.foodList.last[2].year}.',
         notificationDate: date
             .add(
               const Duration(hours: 0),
