@@ -1,5 +1,6 @@
 import 'package:bip_food/data/database.dart';
 import 'package:bip_food/main.dart';
+import 'package:bip_food/util/item_count.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -22,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _myBox = Hive.box('myBox');
   final _controller = TextEditingController();
   FoodDatabase db = FoodDatabase();
+  Color selectedColor = purple;
   @override
   void initState() {
     super.initState();
@@ -29,9 +31,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      db.loadData();
-      // db.createInitialData();
-      // db.updateDatabase();
+      // db.loadData();
+      db.createInitialData();
+      db.updateDatabase();
     }
     NotificationManager.initialize(flutterLocalNotificationsPlugin);
   }
@@ -207,49 +209,95 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
-        toolbarHeight: 100,
+        toolbarHeight: 130,
         centerTitle: false,
-        title: const Text('Bip Food',
-            style: TextStyle(
-                color: black, fontSize: 50, fontWeight: FontWeight.bold)),
         elevation: 0,
         backgroundColor: white,
-        actions: [
-          Row(
-            children: [
-              SizedBox(
-                height: 80,
-                width: 80,
-                child: IconButton(
-                  icon: Image.asset(
-                    'assets/images/logo_circle.png',
-                    fit: BoxFit.contain,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                const Text('Bip Food',
+                    style: TextStyle(
+                        color: black,
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold)),
+                const Spacer(),
+                SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: IconButton(
+                    icon: Image.asset(
+                      'assets/images/logo_circle.png',
+                      fit: BoxFit.contain,
+                    ),
+                    onPressed: () {
+                      // FIXME: to be removed - a profile page will be added
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Bip Food'),
+                            content: const Text('Version 0.1.0'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    // FIXME: to be removed - a profile page will be added
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Bip Food'),
-                          content: const Text('Version 0.0.9'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                ItemCount(
+                  db: db,
+                  color: purple,
+                  onColorSelected: (color) {
+                    setState(() {
+                      selectedColor = color;
+                    });
                   },
                 ),
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: 20),
+                ItemCount(
+                    db: db,
+                    color: red,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
+                const SizedBox(width: 20),
+                ItemCount(
+                    db: db,
+                    color: yellow,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
+                const SizedBox(width: 20),
+                ItemCount(
+                    db: db,
+                    color: green,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
+              ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: purple,
@@ -263,17 +311,95 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          ListView.builder(
-            itemCount: db.foodList.length,
-            itemBuilder: (context, index) {
-              return FoodTile(
-                foodName: db.foodList[index][0],
-                foodImage: db.foodList[index][1],
-                foodExpiryDate: db.foodList[index][2],
-                removeIngredient: (context) => _removeFood(index),
-              );
-            },
-          ),
+          // I want to display a different list of food items based on the color of the tapped item
+          if (selectedColor == red)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays < 0)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == yellow)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays < 3 &&
+                      element[2].difference(DateTime.now()).inDays >= 0)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == green)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays >= 3)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == purple)
+            ListView.builder(
+              itemCount: db.foodList.length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList[index][0],
+                  foodImage: db.foodList[index][1],
+                  foodExpiryDate: db.foodList[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
         ],
       ),
     );
