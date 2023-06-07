@@ -23,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _myBox = Hive.box('myBox');
   final _controller = TextEditingController();
   FoodDatabase db = FoodDatabase();
+  Color selectedColor = purple;
   @override
   void initState() {
     super.initState();
@@ -30,9 +31,9 @@ class _MyHomePageState extends State<MyHomePage> {
       db.createInitialData();
       db.updateDatabase();
     } else {
-      db.loadData();
-      // db.createInitialData();
-      // db.updateDatabase();
+      // db.loadData();
+      db.createInitialData();
+      db.updateDatabase();
     }
     NotificationManager.initialize(flutterLocalNotificationsPlugin);
   }
@@ -208,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: white,
       appBar: AppBar(
-        toolbarHeight: 120,
+        toolbarHeight: 130,
         centerTitle: false,
         elevation: 0,
         backgroundColor: white,
@@ -238,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('Bip Food'),
-                            content: const Text('Version 0.0.9'),
+                            content: const Text('Version 0.1.0'),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -255,16 +256,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            // write a custom text to show the number of food items in the list, the number of red items and the number of green items
             Row(
               children: [
-                ItemCount(db: db, color: purple),
+                ItemCount(
+                  db: db,
+                  color: purple,
+                  onColorSelected: (color) {
+                    setState(() {
+                      selectedColor = color;
+                    });
+                  },
+                ),
                 const SizedBox(width: 20),
-                ItemCount(db: db, color: red),
+                ItemCount(
+                    db: db,
+                    color: red,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
                 const SizedBox(width: 20),
-                ItemCount(db: db, color: yellow),
+                ItemCount(
+                    db: db,
+                    color: yellow,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
                 const SizedBox(width: 20),
-                ItemCount(db: db, color: green),
+                ItemCount(
+                    db: db,
+                    color: green,
+                    onColorSelected: (color) {
+                      setState(() {
+                        selectedColor = color;
+                      });
+                    }),
               ],
             ),
           ],
@@ -282,17 +311,95 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Stack(
         children: [
-          ListView.builder(
-            itemCount: db.foodList.length,
-            itemBuilder: (context, index) {
-              return FoodTile(
-                foodName: db.foodList[index][0],
-                foodImage: db.foodList[index][1],
-                foodExpiryDate: db.foodList[index][2],
-                removeIngredient: (context) => _removeFood(index),
-              );
-            },
-          ),
+          // I want to display a different list of food items based on the color of the tapped item
+          if (selectedColor == red)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays < 0)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 0)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == yellow)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays < 3 &&
+                      element[2].difference(DateTime.now()).inDays >= 0)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays < 3 &&
+                          element[2].difference(DateTime.now()).inDays >= 0)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == green)
+            ListView.builder(
+              itemCount: db.foodList
+                  .where((element) =>
+                      element[2].difference(DateTime.now()).inDays >= 3)
+                  .length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][0],
+                  foodImage: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][1],
+                  foodExpiryDate: db.foodList
+                      .where((element) =>
+                          element[2].difference(DateTime.now()).inDays >= 3)
+                      .toList()[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
+          if (selectedColor == purple)
+            ListView.builder(
+              itemCount: db.foodList.length,
+              itemBuilder: (context, index) {
+                return FoodTile(
+                  foodName: db.foodList[index][0],
+                  foodImage: db.foodList[index][1],
+                  foodExpiryDate: db.foodList[index][2],
+                  removeIngredient: (context) => _removeFood(index),
+                );
+              },
+            ),
         ],
       ),
     );

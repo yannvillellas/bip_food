@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:bip_food/data/database.dart';
 
 class ItemCount extends StatefulWidget {
-  // add a required database wich will be used to get the foodList
   final FoodDatabase db;
   final Color color;
+  final Function(Color)? onColorSelected;
   const ItemCount({
     super.key,
     required this.db,
     required this.color,
+    this.onColorSelected,
   });
 
   @override
@@ -21,18 +22,29 @@ class _ItemCountState extends State<ItemCount> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        setState(() {});
+        if (widget.onColorSelected != null) {
+          // Add this check
+          widget.onColorSelected!(
+              widget.color); // Call the onColorSelected method
+        }
       },
       child: Container(
-          padding: const EdgeInsets.all(10),
+          width: 60,
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: widget.color,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          // write a text and an icon
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(
+                  color: purple,
+                  spreadRadius: 0.5,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ]),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // write the number of colored items corresponding to the color
               Text(
                 widget.color == red
                     ? widget.db.foodList
@@ -59,6 +71,15 @@ class _ItemCountState extends State<ItemCount> {
                                 .length
                                 .toString()
                             : widget.db.foodList.length.toString(),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 8),
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: widget.color,
+                ),
               ),
             ],
           )),
