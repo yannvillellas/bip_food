@@ -1,4 +1,4 @@
-# bip_food
+# Bip Food
 
 A new Flutter project.
 
