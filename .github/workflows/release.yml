@@ -1,4 +1,4 @@
-name: Publish APK & IPA Release
+name: Publish APK Release
 
 on:
   push:
@@ -39,15 +39,10 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Build IPA
-        run: flutter build ios --release --no-codesign
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/ios/iphoneos/Runner.ipa
+          files: build/app/outputs/flutter-apk/app-release.apk
           tag_name: ${{ steps.extract_version.outputs.version }}
           release_name: Release ${{ steps.extract_version.outputs.version }}
           prerelease: true
