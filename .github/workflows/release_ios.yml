@@ -1,0 +1,6 @@
+name: Publish IOS Release
+
+on:
+  push:
+    tags:
+      - 'v*'
