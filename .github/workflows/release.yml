@@ -10,14 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.7.1'
-
       - name: Extract Version
         id: extract_version
         run: |
@@ -27,6 +19,17 @@ jobs:
             exit 0
           fi
           echo "::set-output name=version::$version"
+          
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.1'
+
+      - name: Build APK
+        run: flutter build apk --release
 
       - name: Create Git Tag
         run: git tag ${{ steps.extract_version.outputs.version }}
@@ -35,10 +38,7 @@ jobs:
       - name: Push Git Tag
         run: git push origin ${{ steps.extract_version.outputs.version }}
         if: steps.extract_version.outputs.version != ''
-
-      - name: Build APK
-        run: flutter build apk --release
-
+        
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
